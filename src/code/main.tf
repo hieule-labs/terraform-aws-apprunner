@@ -37,7 +37,7 @@ resource "aws_apprunner_service" "code_example" {
         }
         configuration_source = "API"
       }
-      repository_url = "https://github.com/aws-containers/hello-app-runner"
+      repository_url = var.github_code_repo_url
       source_code_version {
         type  = "BRANCH"
         value = "main"

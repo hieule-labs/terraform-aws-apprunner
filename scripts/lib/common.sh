@@ -11,3 +11,14 @@ init_state_bucket () {
       LocationConstraint="${aws_region}" 2>/dev/null || true
   aws s3api put-bucket-versioning --bucket "${tf_state_s3_bucket}" --region "${aws_region}" --versioning-configuration Status=Enabled 2>/dev/null || true
 }
+
+ensure_env () {
+  local env_file_name=$1
+
+  if [ ! -f "${env_file_name}" ]; then
+    printf "The '%s' file does not exist.\nRun 'cp %s.example %s' to generate a new file then provide correct values.\n" "${env_file_name}" "${env_file_name}" "${env_file_name}"
+    exit
+  fi
+
+  printf "Loaded values from '%s'.\n" "${env_file_name}"
+}

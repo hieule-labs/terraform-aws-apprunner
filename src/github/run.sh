@@ -3,6 +3,7 @@ set -euo pipefail
 
 source "./../../scripts/lib/common.sh"
 
+ensure_env ".apprunner.env"
 source ".apprunner.env"
 
 read_aws_account_id
@@ -38,7 +39,7 @@ help() {
   printf "./run.sh <apply|destroy>\n"
 }
 
-case ${1-apply} in
+case ${1-help} in
   "destroy")
     destroy
   ;;

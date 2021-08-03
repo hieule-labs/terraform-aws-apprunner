@@ -3,17 +3,20 @@ set -euo pipefail
 
 source "./../../scripts/lib/common.sh"
 
+ensure_env ".ecr.env"
 source ".ecr.env"
 
 read_aws_account_id
 init_state_bucket
 
 function init_ecr_env() {
+  ensure_env ".ecr.env"
   source ".ecr.env"
   tf_working_dir="./terraform/ecr"
 }
 
 function init_apprunner_env() {
+  ensure_env ".apprunner.env"
   source ".apprunner.env"
   tf_working_dir="./terraform/apprunner"
 }
@@ -81,10 +84,6 @@ function destroy_ecr() {
 }
 
 
-function apply() {
-  apply_ecr
-}
-
 function destroy() {
   destroy_app_runner
   destroy_ecr
@@ -104,23 +103,18 @@ function show_iam() {
 
 help() {
   printf "./scripts/1-ecr-public-example.sh <command>:\n"
-  printf "-\n"
+  printf "\n"
   printf "<command> values:\n"
-  printf "  apply:              Create ECR repository (alias of apply_ecr)\n"
-  printf "  destroy:            Clean up\n"
   printf "  apply_ecr:          Create ECR repository\n"
   printf "  apply_app_runner:   Create AppRunner service\n"
   printf "  destroy_ecr:        Destroy ECR repository\n"
   printf "  destroy_app_runner: Destroy AppRunner service\n"
+  printf "  destroy:            Clean up all resources (ecr and app_runner)\n"
 }
 
-case ${1-apply} in
+case ${1-help} in
   "destroy")
     destroy
-  ;;
-
-  "apply")
-    apply_ecr
   ;;
 
   "apply_ecr")

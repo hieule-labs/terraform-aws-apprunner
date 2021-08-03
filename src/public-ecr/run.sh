@@ -1,15 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
-source "./scripts/lib/common.sh"
+source "./../../scripts/lib/common.sh"
 
-aws_region="ap-northeast-1"
-ecr_image="public.ecr.aws/aws-containers/hello-app-runner:latest"
+ensure_env ".apprunner.env"
+source ".apprunner.env"
 
 read_aws_account_id
 init_state_bucket
 
-tf_working_dir="./src/ecr-public"
+tf_working_dir="./terraform"
 
 apply() {
   terraform -chdir="${tf_working_dir}" init \
@@ -34,10 +34,10 @@ destroy() {
 }
 
 help() {
-  printf "./scripts/1-ecr-public-example.sh <apply|destroy>\n"
+  printf "./run.sh <apply|destroy>\n"
 }
 
-case ${1-apply} in
+case ${1-help} in
   "destroy")
     destroy
   ;;

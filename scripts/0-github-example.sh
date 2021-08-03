@@ -5,12 +5,12 @@ source "./scripts/lib/common.sh"
 
 aws_region="ap-northeast-1"
 github_connection_arn="arn:aws:apprunner:ap-northeast-1:685501949732:connection/github/c06d5437ad304d35933f992449318b10"
-github_code_repo_url="https://github.com/aws-containers/hello-app-runner"
+github_code_repo_url="https://github.com/hieule-labs/hello-app-runner"
 
 read_aws_account_id
 init_state_bucket
 
-tf_working_dir="./src/code"
+tf_working_dir="./src/github"
 
 apply() {
   terraform -chdir="${tf_working_dir}" init \

@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    key = "terraform/environment/dev/apprunner-code.tfstate"
+    key = "terraform/environment/dev/apprunner-github.tfstate"
   }
 
   required_providers {

@@ -3,7 +3,7 @@ set -euo pipefail
 
 source "./../../scripts/lib/common.sh"
 
-aws_region="ap-northeast-1"
+source ".ecr.env"
 
 read_aws_account_id
 init_state_bucket
@@ -32,7 +32,7 @@ function apply_ecr() {
   -var="ecr_repo_name=${ecr_repo_name}"
 
   ecr_repo_url=$(terraform -chdir="${tf_working_dir}" output -raw ecr_repo_url)
-  echo "region=${aws_region}
+  echo "aws_region=${aws_region}
 ecr_repo_url=\"${ecr_repo_url}\"" > ".apprunner.env"
 
   printf "\n"
@@ -53,7 +53,16 @@ function apply_app_runner() {
 }
 
 function destroy_app_runner() {
-  echo  ""
+  init_apprunner_env
+
+    terraform -chdir="${tf_working_dir}" init \
+    -migrate-state \
+    -backend-config="region=${aws_region}" \
+    -backend-config="bucket=${tf_state_s3_bucket}" \
+    && \
+    terraform -chdir="${tf_working_dir}" destroy -auto-approve \
+    -var="region=${aws_region}" \
+    -var="ecr_repo_url=${ecr_repo_url}"
 }
 
 function destroy_ecr() {
@@ -73,11 +82,12 @@ function destroy_ecr() {
 
 
 function apply() {
-  echo  ""
+  apply_ecr
 }
 
 function destroy() {
-  echo  ""
+  destroy_app_runner
+  destroy_ecr
 }
 
 function show_iam() {
@@ -96,12 +106,12 @@ help() {
   printf "./scripts/1-ecr-public-example.sh <command>:\n"
   printf "-\n"
   printf "<command> values:\n"
-  printf "  apply:              Apply terraform\n"
-  printf "  destroy:            Apply terraform\n"
-  printf "  apply_ecr:          Apply terraform\n"
-  printf "  apply_app_runner:   Apply terraform\n"
-  printf "  destroy_ecr:        Apply terraform\n"
-  printf "  destroy_app_runner: Apply terraform\n"
+  printf "  apply:              Create ECR repository (alias of apply_ecr)\n"
+  printf "  destroy:            Clean up\n"
+  printf "  apply_ecr:          Create ECR repository\n"
+  printf "  apply_app_runner:   Create AppRunner service\n"
+  printf "  destroy_ecr:        Destroy ECR repository\n"
+  printf "  destroy_app_runner: Destroy AppRunner service\n"
 }
 
 case ${1-apply} in
@@ -123,6 +133,14 @@ case ${1-apply} in
 
   "show_iam")
     show_iam
+  ;;
+
+  "destroy_ecr")
+    destroy_ecr
+  ;;
+
+  "destroy_app_runner")
+    destroy_app_runner
   ;;
 
   *)

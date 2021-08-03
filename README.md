@@ -14,3 +14,9 @@ Run `cp some.env.example some.env` to generate an initial configurations for scr
 
 * AWS CLI
 * Terraform
+
+## Scan
+
+```shell
+docker run --rm -v $(pwd):/iac -w /iac accurics/terrascan scan .
+```

@@ -98,7 +98,7 @@ function show_iam() {
   -backend-config="region=${aws_region}" \
   -backend-config="bucket=${tf_state_s3_bucket}" \
   && \
-  terraform -chdir="${tf_working_dir}" output -json
+  terraform -chdir="${tf_working_dir}" output -json iam_access_key_secret
 }
 
 help() {
@@ -109,6 +109,7 @@ help() {
   printf "  apply_app_runner:   Create AppRunner service\n"
   printf "  destroy_ecr:        Destroy ECR repository\n"
   printf "  destroy_app_runner: Destroy AppRunner service\n"
+  printf "  show_secret_key:    Show the iam_access_key_secret of the new IAM user\n"
   printf "  destroy:            Clean up all resources (ecr and app_runner)\n"
 }
 
@@ -125,7 +126,7 @@ case ${1-help} in
     apply_app_runner
   ;;
 
-  "show_iam")
+  "show_secret_key")
     show_iam
   ;;
 

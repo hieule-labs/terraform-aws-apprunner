@@ -15,10 +15,10 @@ provider "aws" {
   region = var.region
 }
 
-resource "aws_apprunner_connection" "github" {
-  connection_name = "apprunner_code_example"
-  provider_type   = "GITHUB"
-}
+#resource "aws_apprunner_connection" "github" {
+#  connection_name = "apprunner_code_example"
+#  provider_type   = "GITHUB"
+#}
 
 resource "aws_apprunner_service" "code_example" {
   service_name = "apprunner_code_example"
